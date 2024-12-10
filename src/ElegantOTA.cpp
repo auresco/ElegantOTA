@@ -20,11 +20,13 @@ void ElegantOTAClass::begin(ELEGANTOTA_WEBSERVER *server, const char * username,
         return request->requestAuthentication();
       }
       #if defined(ASYNCWEBSERVER_VERSION) && ASYNCWEBSERVER_VERSION_MAJOR > 2  // This means we are using recommended fork of AsyncWebServer
-        AsyncWebServerResponse *response = request->beginResponse(200, "text/html", ELEGANT_HTML, sizeof(ELEGANT_HTML));
+        //AsyncWebServerResponse *response = request->beginResponse(200, "text/html", ELEGANT_HTML, sizeof(ELEGANT_HTML));
+        AsyncWebServerResponse *response = request->beginResponse(200, "text/html", ELEGANT_HTML);
       #else
-        AsyncWebServerResponse *response = request->beginResponse_P(200, "text/html", ELEGANT_HTML, sizeof(ELEGANT_HTML));
+        //AsyncWebServerResponse *response = request->beginResponse_P(200, "text/html", ELEGANT_HTML, sizeof(ELEGANT_HTML));
+        AsyncWebServerResponse *response = request->beginResponse_P(200, "text/html", ELEGANT_HTML);
       #endif
-      response->addHeader("Content-Encoding", "gzip");
+      //response->addHeader("Content-Encoding", "gzip");
       request->send(response);
     });
   #else
