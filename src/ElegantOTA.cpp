@@ -16,19 +16,18 @@ void ElegantOTAClass::begin(ELEGANTOTA_WEBSERVER *server, const char * username,
 
   #if ELEGANTOTA_USE_ASYNC_WEBSERVER == 1
     _server->on("/update", HTTP_GET, [&](AsyncWebServerRequest *request){
-      if(!request->authenticate(_username.c_str(), _password.c_str())){
+      if(_authenticate && !request->authenticate(_username.c_str(), _password.c_str())){
         return request->requestAuthentication();
       }
-        //   #if defined(ASYNCWEBSERVER_VERSION) && ASYNCWEBSERVER_VERSION_MAJOR > 2  // This means we are using recommended fork of AsyncWebServer
-        //     //AsyncWebServerResponse *response = request->beginResponse(200, "text/html", ELEGANT_HTML, sizeof(ELEGANT_HTML));
-        //     AsyncWebServerResponse *response = request->beginResponse(200, "text/html", ELEGANT_HTML);
-        //   #else
-        //     //AsyncWebServerResponse *response = request->beginResponse_P(200, "text/html", ELEGANT_HTML, sizeof(ELEGANT_HTML));
-        //     AsyncWebServerResponse *response = request->beginResponse_P(200, "text/html", ELEGANT_HTML);
-        //   #endif
-        //   //response->addHeader("Content-Encoding", "gzip");
-        //   request->send(response);
-        request->send(200, "text/html", ELEGANT_HTML);
+          #if defined(ASYNCWEBSERVER_VERSION) && ASYNCWEBSERVER_VERSION_MAJOR > 2  // This means we are using recommended fork of AsyncWebServer
+            //AsyncWebServerResponse *response = request->beginResponse(200, "text/html", ELEGANT_HTML, sizeof(ELEGANT_HTML));
+            AsyncWebServerResponse *response = request->beginResponse(200, "text/html", ELEGANT_HTML);
+          #else
+            //AsyncWebServerResponse *response = request->beginResponse_P(200, "text/html", ELEGANT_HTML, sizeof(ELEGANT_HTML));
+            AsyncWebServerResponse *response = request->beginResponse_P(200, "text/html", ELEGANT_HTML);
+          #endif
+          //response->addHeader("Content-Encoding", "gzip");
+          request->send(response);
     });
   #else
     _server->on("/update", HTTP_GET, [&](){
@@ -36,13 +35,13 @@ void ElegantOTAClass::begin(ELEGANTOTA_WEBSERVER *server, const char * username,
         return _server->requestAuthentication();
       }
       _server->sendHeader("Content-Encoding", "gzip");
-      _server->send_P(200, "text/html", (const char*)ELEGANT_HTML, sizeof(ELEGANT_HTML));
+      _server->send_P(200, "text/html", ELEGANT_HTML);
     });
   #endif
 
   #if ELEGANTOTA_USE_ASYNC_WEBSERVER == 1
     _server->on("/ota/start", HTTP_GET, [&](AsyncWebServerRequest *request) {
-      if (  !request->authenticate(_username.c_str(), _password.c_str())) {
+      if (_authenticate &&  !request->authenticate(_username.c_str(), _password.c_str())) {
         return request->requestAuthentication();
       }
 
