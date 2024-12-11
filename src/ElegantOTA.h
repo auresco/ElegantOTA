@@ -118,7 +118,7 @@ class ElegantOTAClass{
   private:
     ELEGANTOTA_WEBSERVER *_server;
 
-    bool _authenticate;
+    bool _authenticate=true;
     String _username;
     String _password;
 
