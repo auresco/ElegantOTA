@@ -34,7 +34,7 @@ void ElegantOTAClass::begin(ELEGANTOTA_WEBSERVER *server, const char * username,
       if (_authenticate && !_server->authenticate(_username.c_str(), _password.c_str())) {
         return _server->requestAuthentication();
       }
-      _server->sendHeader("Content-Encoding", "gzip");
+      //_server->sendHeader("Content-Encoding", "gzip");
       _server->send_P(200, "text/html", ELEGANT_HTML);
     });
   #endif
